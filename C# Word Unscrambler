@@ -1,0 +1,197 @@
+using System;
+
+
+
+
+
+
+
+
+
+namespace Word_Unscrambler
+
+{
+
+    class Program
+
+    {
+
+        static void Main(string[] args)
+
+        {
+
+            string[] wordList = new string[0];
+
+            if
+
+                (File.Exists(@"wordlist.txt"))
+
+            {
+
+                File.OpenRead(@"wordlist.txt");//opens the file in read only mode getting the text from the .txt file, the@ will search for the .txt in the bin file. 
+
+                wordList = File.ReadAllLines(@"wordlist.txt");//reading the text from the .txt file. 
+
+            }
+
+            else if (!File.Exists(@"wordlist.txt"))//warning will be thrown and say the file cannot be found. 
+
+            {
+
+                Console.WriteLine("File cannot be found");
+
+                return;
+
+            }
+
+            bool condition = true; //setting the bool condition to true. 
+
+            do//do while loop. 
+
+            {
+
+                Console.WriteLine("Please enter a scrambled word or two scrambled words, seperated with a comma and space: ");//gets the user to enter a scrambled word. 
+
+                string scrambledWord = Console.ReadLine().ToLower();//setting the variable scrambleWord to a string and making the users input to lower case. 
+
+
+
+                string[] promptList = scrambledWord.Split(',');//splitting the users input at a character, a comma. 
+
+                for (int i = 0; i < promptList.Length; i++)//loops through the new array and removes any leading and trailing whitespace for example " ". 
+
+                {
+
+                    promptList[i] = promptList[i].Trim();//calls the trim method within the string class. 
+
+                }
+
+
+
+                bool RealWord = false;//determines the user input is a real word and sets bool RealWord to false. 
+
+                foreach (string enteredWord in wordList)//loops through the words in the wordlist.txt file. 
+
+                {
+
+                    foreach (string word2 in promptList)//looping through the words inputted by the user. 
+
+                    {
+
+                        if (ScrambledWords(word2, enteredWord)) //Check if the scrambled word is in the word list and unscramble it. 
+
+                        {
+
+                            Console.WriteLine($"The unscrambled word of the scrambled word entered is: {enteredWord}"); //The $ part tells the compiler that you want an interpolated string 
+
+                            RealWord = true;
+
+
+
+
+
+
+
+                        }
+
+                    }
+
+                }
+
+
+
+                if (!RealWord)//If the scrambled word is not in the word list, it will display a message. 
+
+                {
+
+                    Console.WriteLine("The scrambled word is not a valid word or cannot be found.");//The wrong word entered will say not a valid word. 
+
+                }
+
+                bool correct = false;//determines if the user has entered correct response. 
+
+                while (!correct)
+
+                {
+
+                    Console.WriteLine("Do you want to \"continue\" or \"end\" the program?");//asks the user if the want to continue or end the program. 
+
+                    string response = Console.ReadLine().ToLower();//setting the users input the lower capitals. 
+
+
+
+
+
+
+
+                    if (response == "end")//if the reponse is == "end", program will end. 
+
+                    {
+
+                        condition = false;
+
+                        correct = true;
+
+                    }
+
+
+
+
+
+
+
+                    if (response == "continue")//if the response if == "continue", will continue and start the program again. 
+
+                    {
+
+                        condition = true;
+
+                        correct = true;
+
+                    }
+
+                }
+
+            }
+
+            while (condition);// repeats above code, so long as condtion is true.                 
+
+        }
+
+
+
+        static bool ScrambledWords(string wordOne, string wordTwo)// A method which checks if two words are the same scrambled versions of each other. 
+
+        {
+
+
+
+            if (wordOne.Length != wordTwo.Length)// Checks if wordOne and wordTwo have the same length. 
+
+            {
+
+                return false;
+
+            }
+
+
+
+            char[] wordOneChars = wordOne.ToCharArray();// stores the string words in a character array. 
+
+            char[] wordTwoChars = wordTwo.ToCharArray();
+
+            Array.Sort(wordOneChars);//sorting the arrays. 
+
+            Array.Sort(wordTwoChars);
+
+
+
+
+
+            return wordOneChars.SequenceEqual(wordTwoChars);// this returns a bool value based on the comparison of the two words. 
+
+        }
+
+    }
+
+}
